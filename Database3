@@ -1,0 +1,79 @@
+--1.Lấy danh sách nhân viên và thông tin phòng ban của họ
+SELECT a.Account_ID, a.Full_Name, d.Department_Name
+FROM Account a
+JOIN Department d ON a.Department_ID = d.Department_ID;
+--2.Viết lệnh để lấy ra thông tin các account được tạo sau ngày 20/12/2010  
+SELECT *
+FROM Account
+WHERE Create_Date > '2010-12-20';
+--3.Viết lệnh để lấy ra tất cả các developer  
+SELECT *
+FROM Account a
+JOIN Position p ON a.Position_ID = p.Position_ID
+WHERE p.PositionName = 'Developer';
+--4.Viết lệnh để lấy ra danh sách các phòng ban có >3 nhân viên t
+SELECT d.Department_ID,Department_Name,Count(a.Accout_ID) as soluongnhanvien
+FROM Department d
+JOIN Account a ON d.Department_ID=a.Department_ID
+GROUP BY d.DepartmentID, d.DepartmentName
+HAVING COUNT(a.AccountID) > 3;
+--5.Question 5: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều nhất 
+SELECT q.QuestionID, q.Content, COUNT(eq.ExamID) AS SoLanSuDung
+FROM Question q
+JOIN ExamQuestion eq ON q.QuestionID = eq.QuestionID
+GROUP BY q.QuestionID, q.Content
+ORDER BY SoLanSuDung DESC
+LIMIT 1;
+--6.Thông kê mỗi category Question được sử dụng trong bao nhiêu Question  
+SELECT c.Category_ID, c.Category_Name, COUNT(q.Question_ID) AS solánsudung
+FROM CategoryQuestion c
+LEFT JOIN Question q ON c.Category_ID = q.Category_ID
+GROUP BY c.Category_ID, c.Category_Name;
+--7.Thông kê mỗi Question được sử dụng trong bao nhiêu Exam 
+SELECT q.Question_ID,q.Content,Count(eq.Exam_ID) as solansudung
+FROM Question q
+LEFT JOIN ExamQuestion eq ON q.QuestionID = eq.QuestionID
+GROUP BY q.QuestionID, q.Content;
+--8.Lấy ra Question có nhiều câu trả lời nhất 
+SELECT q.Question_ID,q.Content, Count(a.Awser_ID) AS socautraloi
+FROM Question q
+JOIN Awser a ON q.Question_ID=a.Question_ID
+GROUP BY q.QuestionID, q.Content
+ORDER BY TotalAnswers DESC
+LIMIT 1;
+--9.Thống kê số lượng account trong mỗi group  
+SELECT g.GroupID, g.GroupName, COUNT(ga.AccountID) AS TotalAccount
+FROM `Group` g
+LEFT JOIN GroupAccount ga ON g.GroupID = ga.GroupID
+GROUP BY g.GroupID, g.GroupName;
+--10.Tìm chức vụ có ít người nhất  
+SELECT p.Postion_ID,p.Postion_Name,Count(a.Account_ID) AS songuoi
+FROM Postion p
+LEFT JOIN Accout a ON a.Postion_ID=p.Postion_ID
+Group By p.Postion_ID,p.Postion_Name
+ORDER By songuoi ASC
+LIMIT 1;
+--11.hống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM 
+
+--12.Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của question, loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì, 
+
+--13.Lấy ra số lượng câu hỏi của mỗi loại tự luận hay trắc nghiệm 
+SELECT tq.TypeName, COUNT(q.QuestionID) AS soluongcauhoi
+FROM TypeQuestion tq
+LEFT JOIN Question q ON tq.TypeID = q.TypeID
+GROUP BY tq.TypeID, tq.TypeName;
+--14.Lấy ra group không có account nào 
+SELECT g.GroupID, g.GroupName
+FROM GroupTable g
+LEFT JOIN GroupAccount ga ON g.Group_ID = ga.Group_ID
+WHERE ga.Account_ID IS NULL;
+--16.Lấy ra question không có answer nào
+SELECT q.Question_ID, q.Content
+FROM Question q
+LEFT JOIN Answer a ON q.QuestionID = a.QuestionID
+WHERE a.AnswerID IS NULL;
+ 
+
+
+
+
